@@ -19,6 +19,10 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import entity.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.solr.core.SolrTemplate;
+import org.springframework.data.solr.core.query.Criteria;
+import org.springframework.data.solr.core.query.SimpleQuery;
+import org.springframework.data.solr.core.query.SolrDataQuery;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +43,7 @@ import java.util.Set;
 @SuppressWarnings("ALL")
 @Service
 @Transactional
-public class GoodsServiceImpl implements  GoodsService {
+public class GoodsServiceImpl implements GoodsService {
     @Autowired
     private GoodsDao goodsDao;
     @Autowired
@@ -261,7 +265,11 @@ public class GoodsServiceImpl implements  GoodsService {
     @Autowired
     private Destination topicPageAndSolrDestination;   //一发 多接收的   发布 订阅模式 主题模式
     @Autowired
+    private Destination topicPageAndSolrDestinationDele;   //一发 多接收的 用于接收下架商品的删除id
+    @Autowired
     private Destination queueSolrDeleteDestination;  //一发 一接  点对点  队列模式
+    @Autowired
+    private SolrTemplate solrTemplate;
 
     @Override
     public void updateStatus(Long[] ids, String status) {
@@ -270,13 +278,21 @@ public class GoodsServiceImpl implements  GoodsService {
         goods.setAuditStatus(status);
 
         //商品表的ID
+
         for (Long id : ids) {
             goods.setId(id);
             //1:更新审核状态
             goodsDao.updateByPrimaryKeySelective(goods);
+            //判断
             //只有审核通过才会完成下面二项
             if("1".equals(status)){
-
+                //将上架商品添加到索引库
+                ItemQuery itemQuery = new ItemQuery();
+                ItemQuery.Criteria criteria = itemQuery.createCriteria().andGoodsIdEqualTo(id);
+                List<Item> items = itemDao.selectByExample(itemQuery);
+                if (items != null && items.size() > 0){
+                    solrTemplate.saveBeans(items,1000);
+                }
                 //发消息
                 jmsTemplate.send(topicPageAndSolrDestination, new MessageCreator() {
                     @Override
@@ -284,10 +300,22 @@ public class GoodsServiceImpl implements  GoodsService {
                         return session.createTextMessage(String.valueOf(id));
                     }
                 });
+            }else {
+                //从索引库删除下架商品
+                Criteria criteria = new Criteria("item_goodsid").is(id);
+                SolrDataQuery query = new SimpleQuery(criteria);
+                solrTemplate.delete(query);
+                solrTemplate.commit();
+                //从磁盘中删除静态页面
+                //发消息
+                jmsTemplate.send(topicPageAndSolrDestinationDele, new MessageCreator() {
+                    @Override
+                    public Message createMessage(Session session) throws JMSException {
+                        return session.createTextMessage(String.valueOf(id));
+                    }
+                });
+
             }
-
         }
-
     }
-
 }
