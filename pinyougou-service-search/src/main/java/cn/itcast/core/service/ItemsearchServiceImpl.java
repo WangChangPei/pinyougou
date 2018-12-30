@@ -31,8 +31,6 @@ public class ItemsearchServiceImpl implements ItemsearchService {
         //关键词处理一下
         searchMap.put("keywords",searchMap.get("keywords").replaceAll(" ",""));
 
-
-
         //4:结果集
         //5:总条数
         Map<String, Object> map = searchHighlightPage(searchMap);
