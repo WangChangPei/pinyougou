@@ -260,10 +260,24 @@ app.controller('goodsController' ,function($scope,$controller,$location,typeTemp
 	$scope.findItemCatList = function(){
 		itemCatService.findAll().success(function(response){
 			for(var i=0;i<response.length;i++){
+				// alert(response);
 				$scope.itemCatList[response[i].id] = response[i].name;
 			}
 		});
 	}
+
+    // 审核的方法:
+    $scope.updateStatus = function(status){
+        goodsService.updateStatus($scope.selectIds,status).success(function(response){
+            if(response.flag){
+                $scope.reloadList();//刷新列表
+                $scope.selectIds = [];
+            }else{
+                alert(response.message);
+
+            }
+        });
+    }
 
 
 });	
