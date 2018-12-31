@@ -40,12 +40,12 @@ public class UserOrderController {
         return userOrderService.findPage(pageNum,pageSize);
     }
 
-    // 查询用户中心订单列表
-    @RequestMapping("findNotPayOrderList")
-    public List<UserOrder> findNotPayOrderList(){
+    // 查询待付款/待发货/待收货/待评价订单
+    @RequestMapping("findAloneOrderList")
+    public List<UserOrder> findAloneOrderList(String status){
         // 查询当前登录人姓名
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userOrderService.findNotPayOrderList(name);
+        return userOrderService.findAloneOrderList(name,status);
     }
 
     // 保存个人中心新增个人信息

@@ -21,8 +21,6 @@ public interface UserOrderService {
 
     void addUserAddress(Address address);
 
-    List<UserOrder> findNotPayOrderList(String name);
-
     PageResult findPage(Integer pageNum, Integer pageSize);
 
     Map<String,Object> findUserCollectList(String name);
@@ -30,4 +28,6 @@ public interface UserOrderService {
     Address findAddressById(Long id);
 
     void updateUserAddress(Address address);
+
+    List<UserOrder> findAloneOrderList(String name, String status);
 }

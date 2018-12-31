@@ -29,9 +29,9 @@ app.controller('indexController',function($scope,userOrderService,loginService){
         });
     }
 
-    // 查询未支付订单
-    $scope.findNotPayOrderList=function () {
-        userOrderService.findNotPayOrderList().success(
+    // 查询待付款/待发货/待收货/待评价订单
+    $scope.findAloneOrderList=function (status) {
+        userOrderService.findAloneOrderList(status).success(
             function (response) {    // List<UserOrder>
                 $scope.userOrderList=response;
 

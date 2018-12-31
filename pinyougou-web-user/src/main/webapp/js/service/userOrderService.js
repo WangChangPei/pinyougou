@@ -10,9 +10,9 @@ app.service("userOrderService",function($http){
         return $http.get("../userOrder/findPage.do?pageNum="+page+"&pageSize="+rows);
     }
 
-    // 查询用户中心未支付订单列表
-    this.findNotPayOrderList = function () {
-        return $http.get("../userOrder/findNotPayOrderList.do");
+    // 查询待付款/待发货/待收货/待评价订单
+    this.findAloneOrderList = function (status) {
+        return $http.get("../userOrder/findAloneOrderList.do?status=" + status);
     }
 
     // 保存个人信息

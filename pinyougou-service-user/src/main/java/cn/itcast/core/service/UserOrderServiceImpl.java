@@ -52,7 +52,6 @@ public class UserOrderServiceImpl implements UserOrderService {
         OrderQuery orderQuery = new OrderQuery();
         orderQuery.createCriteria().andUserIdEqualTo(name);
         List<Order> orderList = orderDao.selectByExample(orderQuery);
-        System.out.println("orderList:" + orderList);
 
         for (Order order : orderList) {
             UserOrder userOrder = new UserOrder();
@@ -61,7 +60,6 @@ public class UserOrderServiceImpl implements UserOrderService {
             OrderItemQuery orderItemQuery = new OrderItemQuery();
             orderItemQuery.createCriteria().andOrderIdEqualTo(orderId);
             List<OrderItem> orderItemList = orderItemDao.selectByExample(orderItemQuery);
-            System.out.println("orderItemList:" + orderItemList);
 
             userOrder.setCreateTime(order.getCreateTime());
             userOrder.setStatus(order.getStatus());
@@ -73,7 +71,7 @@ public class UserOrderServiceImpl implements UserOrderService {
             userOrder.setOrderItemList(orderItemList);
             userOrderList.add(userOrder);
         }
-        System.out.println("userOrderList:" + userOrderList);
+
         return userOrderList;
     }
 
@@ -101,7 +99,6 @@ public class UserOrderServiceImpl implements UserOrderService {
             addressDao.updateByPrimaryKeySelective(address);
         }
 
-
         Address address = new Address();
 
 //        address.setIsDefault("0");
@@ -124,35 +121,6 @@ public class UserOrderServiceImpl implements UserOrderService {
         addressDao.insertSelective(address);
     }
 
-    @Override
-    public List<UserOrder> findNotPayOrderList(String name) {
-        List<UserOrder> userOrderList = new ArrayList<>();
-
-        // 查询该登录用户下的所有订单
-        OrderQuery orderQuery = new OrderQuery();
-        orderQuery.createCriteria().andUserIdEqualTo(name).andStatusEqualTo("1");
-        List<Order> orderList = orderDao.selectByExample(orderQuery);
-
-        for (Order order : orderList) {
-            UserOrder userOrder = new UserOrder();
-            Long orderId = order.getOrderId();
-            // 查询每个订单内的所有订单项集合
-            OrderItemQuery orderItemQuery = new OrderItemQuery();
-            orderItemQuery.createCriteria().andOrderIdEqualTo(orderId);
-            List<OrderItem> orderItemList = orderItemDao.selectByExample(orderItemQuery);
-
-            userOrder.setCreateTime(order.getCreateTime());
-            userOrder.setStatus(order.getStatus());
-            userOrder.setOrderId(order.getOrderId());
-
-            Seller seller = sellerDao.selectByPrimaryKey(order.getSellerId());
-            userOrder.setSellerName(seller.getName());
-
-            userOrder.setOrderItemList(orderItemList);
-            userOrderList.add(userOrder);
-        }
-        return userOrderList;
-    }
 
     @Override
     public PageResult findPage(Integer pageNum, Integer pageSize) {
@@ -177,6 +145,37 @@ public class UserOrderServiceImpl implements UserOrderService {
     @Override
     public void updateUserAddress(Address address) {
         addressDao.updateByPrimaryKeySelective(address);
+    }
+
+    @Override
+    public List<UserOrder> findAloneOrderList(String name, String status) {
+        List<UserOrder> userOrderList = new ArrayList<>();
+
+        // 查询该登录用户下的所有订单
+        OrderQuery orderQuery = new OrderQuery();
+        orderQuery.createCriteria().andUserIdEqualTo(name).andStatusEqualTo(status);
+        List<Order> orderList = orderDao.selectByExample(orderQuery);
+
+        for (Order order : orderList) {
+            UserOrder userOrder = new UserOrder();
+            Long orderId = order.getOrderId();
+            // 查询每个订单内的所有订单项集合
+            OrderItemQuery orderItemQuery = new OrderItemQuery();
+            orderItemQuery.createCriteria().andOrderIdEqualTo(orderId);
+            List<OrderItem> orderItemList = orderItemDao.selectByExample(orderItemQuery);
+
+            userOrder.setCreateTime(order.getCreateTime());
+            userOrder.setStatus(order.getStatus());
+            userOrder.setOrderId(order.getOrderId());
+
+            Seller seller = sellerDao.selectByPrimaryKey(order.getSellerId());
+            userOrder.setSellerName(seller.getName());
+
+            userOrder.setOrderItemList(orderItemList);
+            userOrderList.add(userOrder);
+        }
+        return userOrderList;
+
     }
 
 }
