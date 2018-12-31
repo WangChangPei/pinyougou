@@ -16,7 +16,7 @@ ms_DatePicker: function (options) {
             var FirstValue = opts.FirstValue;
 
             // 初始化
-            var str = "<option value=\"" + FirstValue + "\">" + FirstText + "</option>";
+            var str = "<option value= \""+ FirstValue + "\">" + FirstText + "</option>";
             $YearSelector.html(str);
             $MonthSelector.html(str);
             $DaySelector.html(str);

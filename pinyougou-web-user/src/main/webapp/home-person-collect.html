@@ -10,11 +10,17 @@
 
     <link rel="stylesheet" type="text/css" href="css/webbase.css" />
     <link rel="stylesheet" type="text/css" href="css/pages-seckillOrder.css" />
+
+	<script type="text/javascript" src="plugins/angularjs/angular.min.js"></script>
+	<script type="text/javascript" src="js/base.js"></script>
+	<script type="text/javascript" src="js/service/userOrderService.js"></script>
+	<script type="text/javascript" src="js/controller/collectController.js"></script>
 </head>
 
-<body>
+<body ng-app="pinyougou" ng-controller="collectController" ng-init="findUserCollectList()">
     <!-- 头部栏位 -->
     <!--页面顶部-->
+
 <div id="nav-bottom">
 	<!--顶部-->
 	<div class="nav-top">
