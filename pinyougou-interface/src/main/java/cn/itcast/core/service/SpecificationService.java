@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 public interface SpecificationService {
-    PageResult search(Integer page, Integer rows, Specification specification);
 
     void add(SpecificationVo vo);
 
@@ -18,4 +17,11 @@ public interface SpecificationService {
 
     List<Map> selectOptionList();
 
+    void specificationApply(SpecificationVo vo, String name);
+
+    void delete(Long[] ids);
+
+    public PageResult search(Integer page, Integer rows, Specification specification);
+
+    PageResult search(Integer page, Integer rows, Specification specification, String name);
 }

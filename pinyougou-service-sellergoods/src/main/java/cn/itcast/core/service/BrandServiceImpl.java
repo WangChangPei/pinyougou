@@ -59,6 +59,30 @@ public class BrandServiceImpl implements  BrandService {
         return new PageResult(p.getTotal(), p.getResult());
 
     }
+    //查询分页对象
+    public PageResult search(Integer pageNum, Integer pageSize,Brand brand,String name) {
+        //分页插件
+        PageHelper.startPage(pageNum,pageSize);
+        //创建品牌条件对象
+        BrandQuery brandQuery = new BrandQuery();
+
+        BrandQuery.Criteria criteria = brandQuery.createCriteria();
+        criteria.andSellerIdEqualTo(name);
+
+        //判断名称
+        if(null != brand.getName() && !"".equals(brand.getName().trim())){
+            criteria.andNameLike("%" + brand.getName().trim() +"%");
+        }
+        //判断首字母
+        if(null != brand.getFirstChar() && !"".equals(brand.getFirstChar().trim())){
+            criteria.andFirstCharEqualTo(brand.getFirstChar().trim());
+        }
+        //查询
+        Page<Brand> p = (Page<Brand>) brandDao.selectByExample(brandQuery);
+
+        return new PageResult(p.getTotal(), p.getResult());
+
+    }
 
     //保存
     @Override
@@ -97,5 +121,33 @@ public class BrandServiceImpl implements  BrandService {
     public List<Map> selectOptionList() {
         return brandDao.selectOptionList();
 
+    }
+
+    /**
+     * 添加品牌申请
+     * @param brand
+     * @param name
+     */
+    @Override
+    public void addBrandApply(Brand brand, String name) {
+        brand.setStatus("0");
+        brand.setSellerId(name);
+        brandDao.insertSelective(brand);
+    }
+
+    /**
+     * 更新删除的状态
+     * @param ids
+     */
+    @Override
+    public void updateStatus(Long[] ids) {
+        for (Long id : ids) {
+
+            Brand brand = brandDao.selectByPrimaryKey(id);
+            if("3".equals(brand.getStatus())){
+                brand.setStatus("3");
+                brandDao.updateByPrimaryKeySelective(brand);
+            }
+        }
     }
 }

@@ -25,13 +25,13 @@ import java.util.Map;
 @Transactional
 public class TypeTemplateServiceImpl implements TypeTemplateService {
 
-
     @Autowired
     private TypeTemplateDao typeTemplateDao;
     @Autowired
     private SpecificationOptionDao specificationOptionDao;
     @Autowired
     private RedisTemplate redisTemplate;
+
     @Override
     public PageResult search(Integer page, Integer rows, TypeTemplate tt) {
         //1:查询所有模板结果集
@@ -41,16 +41,15 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
 
             //[{"id":52,"text":"法拉利"},{"id":53,"text":"特斯拉"},{"id":54,"text":"五凌宏光"}]
             //品牌列表
-            redisTemplate.boundHashOps("brandList").put(typeTemplate.getId(),JSON.parseArray(typeTemplate.getBrandIds(), Map.class));
+            redisTemplate.boundHashOps("brandList").put(typeTemplate.getId(), JSON.parseArray(typeTemplate.getBrandIds(), Map.class));
             //规格列表
             //[{"id":44,"text":"汽车颜色123"},{"id":45,"text":"汽车排量"},{"id":46,"text":"汽车坐标"}]
-            redisTemplate.boundHashOps("specList").put(typeTemplate.getId(),findBySpecList(typeTemplate.getId()));
+            redisTemplate.boundHashOps("specList").put(typeTemplate.getId(), findBySpecList(typeTemplate.getId()));
 
         }
 
-        
         //分页插件
-        PageHelper.startPage(page,rows);
+        PageHelper.startPage(page, rows);
         //排序
         //PageHelper.orderBy("id desc");
         TypeTemplateQuery query = new TypeTemplateQuery();
@@ -59,11 +58,46 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
         //分页对象
         Page<TypeTemplate> p = (Page<TypeTemplate>) typeTemplateDao.selectByExample(query);
 
-        return new PageResult(p.getTotal(),p.getResult());
+        return new PageResult(p.getTotal(), p.getResult());
+    }
+
+    @Override
+    public PageResult search(Integer page, Integer rows, TypeTemplate tt, String name) {
+        tt.setSellerId(name);
+        //分页插件
+        PageHelper.startPage(page, rows);
+        //排序
+        TypeTemplateQuery query = new TypeTemplateQuery();
+
+        TypeTemplateQuery.Criteria criteria = query.createCriteria();
+        //查询条件
+        //根据商品名称查询
+        if (null != tt.getName() && !"".equals(tt.getName().trim())) {
+            criteria.andNameLike("%" + tt.getName().trim() + "%");
+        }
+        //根据商家id查询此商家结果集
+        if (null != tt.getSellerId() && !"".equals(tt.getSellerId())) {
+            criteria.andSellerIdEqualTo(name);
+        }
+        query.setOrderByClause("id desc");
+
+        //分页对象
+        Page<TypeTemplate> p = (Page<TypeTemplate>) typeTemplateDao.selectByExample(query);
+
+        return new PageResult(p.getTotal(), p.getResult());
     }
 
     @Override
     public void add(TypeTemplate tt) {
+
+        tt.setStatus("0");
+        typeTemplateDao.insertSelective(tt);
+    }
+
+    @Override
+    public void add(TypeTemplate tt, String name) {
+        tt.setStatus("0");
+        tt.setSellerId(name);
         typeTemplateDao.insertSelective(tt);
     }
 
@@ -88,15 +122,30 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
         List<Map> listMap = JSON.parseArray(specIds, Map.class);
         for (Map map : listMap) {
 
-        //  Map1 K:id V:27  K:text V:网络 K:options V:list
+            //  Map1 K:id V:27  K:text V:网络 K:options V:list
             SpecificationOptionQuery query = new SpecificationOptionQuery();
-            query.createCriteria().andSpecIdEqualTo((long)(Integer)map.get("id"));//Object -->Integer --> Long
+            query.createCriteria().andSpecIdEqualTo((long) (Integer) map.get("id"));//Object -->Integer --> Long
             List<SpecificationOption> specificationOptionList = specificationOptionDao.selectByExample(query);
-            map.put("options",specificationOptionList);
+            map.put("options", specificationOptionList);
             //Map2
         }
-
-
         return listMap;
     }
+
+    /**
+     * 修改模板状态
+     *
+     * @param ids
+     */
+    @Override
+    public void delete(Long[] ids) {
+        for (Long id : ids) {
+            TypeTemplate typeTemplate = new TypeTemplate();
+            typeTemplate.setId(id);
+            typeTemplate.setStatus("3");
+            typeTemplateDao.updateByPrimaryKeySelective(typeTemplate);
+        }
+
+    }
+
 }
