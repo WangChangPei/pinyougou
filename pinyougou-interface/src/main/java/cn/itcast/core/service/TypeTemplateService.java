@@ -9,12 +9,16 @@ import java.util.Map;
 public interface TypeTemplateService {
 
     PageResult search(Integer page, Integer rows, TypeTemplate tt);
-
+    PageResult search(Integer page, Integer rows, TypeTemplate tt,String name);
     void add(TypeTemplate tt);
+    void add(TypeTemplate tt,String name);
 
     TypeTemplate findOne(Long id);
 
     void update(TypeTemplate tt);
 
     List<Map> findBySpecList(Long id);
+
+    void delete(Long[] ids);
+
 }

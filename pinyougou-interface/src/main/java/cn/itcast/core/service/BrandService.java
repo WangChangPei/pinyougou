@@ -24,6 +24,11 @@ public interface BrandService {
     void delete(Long[] ids);
 
     PageResult search(Integer pageNum, Integer pageSize, Brand brand);
+    PageResult search(Integer pageNum, Integer pageSize, Brand brand,String name);
 
     List<Map> selectOptionList();
+
+    void addBrandApply(Brand brand, String name);
+
+    void updateStatus(Long[] ids);
 }
