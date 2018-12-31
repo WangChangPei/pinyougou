@@ -1,12 +1,18 @@
 package cn.itcast.core.service;
 
 
+import cn.itcast.core.mapper.ad.ContentCategoryDao;
 import cn.itcast.core.mapper.good.BrandDao;
 import cn.itcast.core.mapper.good.GoodsDao;
 import cn.itcast.core.mapper.order.OrderDao;
+import cn.itcast.core.mapper.specification.SpecificationDao;
+import cn.itcast.core.mapper.template.TypeTemplateDao;
+import cn.itcast.core.pojo.ad.ContentCategory;
 import cn.itcast.core.pojo.good.Brand;
 import cn.itcast.core.pojo.good.Goods;
 import cn.itcast.core.pojo.order.Order;
+import cn.itcast.core.pojo.specification.Specification;
+import cn.itcast.core.pojo.template.TypeTemplate;
 import com.alibaba.dubbo.config.annotation.Service;
 import org.apache.poi.hssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +32,12 @@ private GoodsDao goodsDao;
 private OrderDao orderDao;
 @Autowired
 private BrandDao brandDao;
+@Autowired
+private SpecificationDao specificationDao;
+@Autowired
+private TypeTemplateDao typeTemplateDao;
+@Autowired
+private ContentCategoryDao contentCategoryDao;
 
     @Override
     public byte[] exportGoods() throws IOException {
@@ -57,6 +69,32 @@ private BrandDao brandDao;
 
 
         brandDao.insertSelective(brand);
+    }
+
+    @Override
+    public void updateFileSpecification(List list) throws Exception {
+
+        Specification specification = new Specification();
+        specification.setSpecName(list.get(0).toString());
+        specificationDao.insertSelective(specification);
+    }
+
+    @Override
+    public void updateFileTypeTemplate(List list) throws Exception {
+
+        TypeTemplate typeTemplate = new TypeTemplate();
+        typeTemplate.setName(list.get(0).toString());
+        typeTemplate.setSpecIds(list.get(1).toString());
+        typeTemplate.setBrandIds(list.get(2).toString());
+        typeTemplate.setCustomAttributeItems(list.get(3).toString());
+        typeTemplateDao.insertSelective(typeTemplate);
+    }
+
+    @Override
+    public void updateFileContentCategory(List list) throws Exception {
+        ContentCategory contentCategory = new ContentCategory();
+        contentCategory.setName(list.get(0).toString());
+        contentCategoryDao.insertSelective(contentCategory);
     }
 
     //导出的是Order的数据
