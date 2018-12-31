@@ -47,6 +47,7 @@ app.controller('addressController',function($scope,userOrderService){
     // 编辑地址
     $scope.updateUserAddress=function () {
         userOrderService.updateUserAddress($scope.entity2).success(
+
             function (response) {
                 if(response.flag){
                     $scope.findUserAddressList();

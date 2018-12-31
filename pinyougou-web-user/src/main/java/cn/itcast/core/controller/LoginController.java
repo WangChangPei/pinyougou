@@ -24,6 +24,7 @@ public class LoginController {
         Map<String,Object> map = new HashMap<>();
         map.put("loginName",name);
 
+
         return map;
 
     }

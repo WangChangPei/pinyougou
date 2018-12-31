@@ -8,4 +8,5 @@ app.controller('collectController',function($scope,userOrderService) {
             }
         )
     }
-};
+
+}

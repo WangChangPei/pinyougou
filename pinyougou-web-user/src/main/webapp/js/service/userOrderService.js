@@ -41,6 +41,7 @@ app.service("userOrderService",function($http){
         return $http.get("../userOrder/findAddressById.do?id="+ id);
     }
 
+
     // 编辑收货地址
     this.updateUserAddress = function (entity2) {
         return $http.post("../userOrder/updateUserAddress.do",entity2);

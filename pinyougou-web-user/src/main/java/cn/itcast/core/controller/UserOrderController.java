@@ -122,6 +122,7 @@ public class UserOrderController {
             // 查询当前登录人姓名
             String name = SecurityContextHolder.getContext().getAuthentication().getName();
             address.setUserId(name);
+
             userOrderService.addUserAddress(address);
             return new Result(true,"新增成功!");
         } catch (Exception e) {
