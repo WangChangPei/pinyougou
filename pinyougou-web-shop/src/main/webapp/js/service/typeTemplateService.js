@@ -9,6 +9,7 @@ app.service('typeTemplateService',function($http){
 	this.findPage=function(page,rows){
 		return $http.get('../typeTemplate/findPage.do?page='+page+'&rows='+rows);
 	}
+
 	//查询实体
 	this.findOne=function(id){
 		return $http.get('../typeTemplate/findOne.do?id='+id);
@@ -16,6 +17,10 @@ app.service('typeTemplateService',function($http){
 	//增加 
 	this.add=function(entity){
 		return  $http.post('../typeTemplate/add.do',entity );
+	}
+	//增加申请
+	this.addApply=function(entity){
+		return  $http.post('../typeTemplate/addApply.do',entity);
 	}
 	//修改 
 	this.update=function(entity){
@@ -25,12 +30,20 @@ app.service('typeTemplateService',function($http){
 	this.dele=function(ids){
 		return $http.get('../typeTemplate/delete.do?ids='+ids);
 	}
-	//搜索
+	/*//搜索
 	this.search=function(page,rows,searchEntity){
 		return $http.post('../typeTemplate/search.do?page='+page+"&rows="+rows, searchEntity);
-	}    	
+	}*/
+	//条件查询
+	this.search=function(page,rows,searchEntity){
+		return $http.post('../typeTemplate/searchByName.do?page='+page+"&rows="+rows, searchEntity);
+	}
 	
 	this.findBySpecList=function(id){
 		return $http.get('../typeTemplate/findBySpecList.do?id='+id);
 	}
+    //修改状态
+    this.updateStatus=function(ids){
+        return $http.get('../typeTemplate/updateStatus.do?ids='+ids);
+    }
 });

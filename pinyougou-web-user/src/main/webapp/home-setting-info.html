@@ -236,9 +236,16 @@
                                 <div class="control-group">
                                     <label for="inputPassword" class="control-label">生日：</label>
                                     <div class="controls">
-                                        <select id="select_year2" rel="1990" ></select>年
-                                        <select id="select_month2" rel="4" ></select>月
-                                        <select id="select_day2" rel="3" ></select>日
+                                        <select id="select_year2"  ng-model="entity.year">
+                                            <option selected="selected">{{entity.year}}</option>
+                                        </select>年
+                                        <select id="select_month2"  ng-model="entity.month">
+                                            <option selected="selected">{{entity.month}}</option>
+                                        </select>月
+
+                                        <select id="select_day2"  ng-model="entity.day">
+                                            <option selected="selected">{{entity.day}}</option>
+                                        </select>日
                                     </div>
                                 </div>
 
@@ -248,13 +255,19 @@
                                     <div class="controls">
                                         <div data-toggle="distpicker">
                                             <div class="form-group area">
-                                                <select class="form-control" id="province1"></select>
+                                                <select class="form-control" id="province1" ng-model="entity.provinceId">
+                                                    <option selected="selected">{{entity.provinceId}}</option>
+                                                </select>
                                             </div>
                                             <div class="form-group area">
-                                                <select class="form-control" id="city1"></select>
+                                                <select class="form-control" id="city1" ng-model="entity.cityId">
+                                                    <option selected="selected">{{entity.cityId}}</option>
+                                                </select>
                                             </div>
                                             <div class="form-group area">
-                                                <select class="form-control" id="district1"></select>
+                                                <select class="form-control" id="district1" ng-model="entity.townId">
+                                                    <option selected="selected">{{entity.townId}}</option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -262,17 +275,18 @@
                                 <div class="control-group">
                                     <label for="inputJob" class="control-label">职业：</label>
                                     <div class="controls">
-                                        <span class="sui-dropdown dropdown-bordered select"><span
-                                                class="dropdown-inner">
+                                        <span class="sui-dropdown dropdown-bordered select"><span class="dropdown-inner">
                                         <a role="button" data-toggle="dropdown" href="#" class="dropdown-toggle">
                                             <input name="job" type="hidden" data-rules="required">
                                             <i class="caret"></i>
                                             <span>请选择</span>
                                         </a>
                                             <ul id="menu4"  role="menu" aria-labelledby="drop4" class="sui-dropdown-menu">
-                                                <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                <li role="presentation">
+                                                    <a role="menuitem" tabindex="-1"
                                                                            href="javascript:void(0);"
-                                                                           value="bj" >程序员</a></li>
+                                                                           value="bj" >程序员</a>
+                                                </li>
                                                 <li role="presentation"><a role="menuitem" tabindex="-1"
                                                                            href="javascript:void(0);"
                                                                            value="sb" >产品经理</a></li>

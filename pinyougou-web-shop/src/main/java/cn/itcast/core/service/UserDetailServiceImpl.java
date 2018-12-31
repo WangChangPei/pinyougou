@@ -22,7 +22,7 @@ public class UserDetailServiceImpl implements UserDetailsService{
         this.sellerService = sellerService;
     }
 
-    //方法
+    //认证的方法
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         //商家名称 查询 商家对象

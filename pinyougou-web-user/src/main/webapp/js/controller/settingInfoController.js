@@ -6,6 +6,7 @@ app.controller('settingInfoController',function ($scope,userOrderService) {
     // $scope.entity = {username:"",nickName:"",sex:"",birthday:"",address:"",job:""};
     // 保存个人信息
     $scope.save=function () {
+
         userOrderService.save($scope.entity).success(
             function (response) {
                 if(response.flag){

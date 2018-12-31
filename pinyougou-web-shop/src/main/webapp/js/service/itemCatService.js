@@ -17,6 +17,10 @@ app.service('itemCatService',function($http){
 	this.add=function(entity){
 		return  $http.post('../itemCat/add.do',entity );
 	}
+	//增加
+	this.addApply=function(entity){
+		return  $http.post('../itemCat/addApply.do',entity );
+	}
 	//修改 
 	this.update=function(entity){
 		return  $http.post('../itemCat/update.do',entity );
@@ -28,7 +32,11 @@ app.service('itemCatService',function($http){
 	//搜索
 	this.search=function(page,rows,searchEntity){
 		return $http.post('../itemCat/search.do?page='+page+"&rows="+rows, searchEntity);
-	}    	
+	}
+	/*//搜索
+	this.searchByName=function(page,rows){
+		return $http.post('../itemCat/searchByName.do?page='+page+"&rows="+rows);
+	}*/
 	
 	this.findByParentId = function(parentId){
 		return $http.get("../itemCat/findByParentId.do?parentId="+parentId);

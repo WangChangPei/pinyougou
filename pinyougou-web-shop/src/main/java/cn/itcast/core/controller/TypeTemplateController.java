@@ -5,6 +5,7 @@ import cn.itcast.core.service.TypeTemplateService;
 import com.alibaba.dubbo.config.annotation.Reference;
 import entity.PageResult;
 import entity.Result;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,13 +26,37 @@ public class TypeTemplateController {
 
     @RequestMapping("/search")
     public PageResult search(Integer page, Integer rows, @RequestBody TypeTemplate tt){
+        //获取商家名称
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
         return typeTemplateService.search(page,rows,tt);
     }
+    @RequestMapping("/searchByName")
+    public PageResult searchByName(Integer page, Integer rows, @RequestBody TypeTemplate tt){
+        //获取商家名称
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        return typeTemplateService.search(page,rows,tt,name);
+    }
+
     //添加
     @RequestMapping("/add")
     public Result add(@RequestBody TypeTemplate tt){
         try {
+            //获取商家名称
             typeTemplateService.add(tt);
+            return new Result(true,"成功");
+        } catch (Exception e) {
+            //e.printStackTrace();
+            return new Result(false,"失败");
+        }
+    }
+
+    //添加模板申请
+    @RequestMapping("/addApply")
+    public Result addApply(@RequestBody TypeTemplate tt){
+        try {
+            //获取商家名称
+            String name = SecurityContextHolder.getContext().getAuthentication().getName();
+            typeTemplateService.add(tt,name);
             return new Result(true,"成功");
         } catch (Exception e) {
             //e.printStackTrace();
@@ -59,4 +84,32 @@ public class TypeTemplateController {
     public List<Map> findBySpecList(Long id){
         return typeTemplateService.findBySpecList(id);
     }
+
+    /**
+     * 修改模板的状态为3
+     * @param ids
+     * @return
+     */
+    @RequestMapping("/delete")
+    public Result delete(Long[] ids){
+        try {
+            typeTemplateService.delete(ids);
+            return new Result(true,"成功");
+        } catch (Exception e) {
+            //e.printStackTrace();
+            return new Result(false,"失败");
+        }
+    }
+
+  /*
+    @RequestMapping("/delete")
+    public Result updateStatus(Long id){
+        try {
+            typeTemplateService.updateStatus(id);
+            return new Result(true,"成功");
+        } catch (Exception e) {
+            //e.printStackTrace();
+            return new Result(false,"失败");
+        }
+    }*/
 }
