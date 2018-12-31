@@ -19,7 +19,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@SuppressWarnings("all")
 @RestController
 @RequestMapping("/file")
 public class FileController {
@@ -71,7 +71,7 @@ public class FileController {
 
 
     @RequestMapping(value = "/uploadClientStock")
-    public Result updateFile(MultipartFile file) throws Exception {
+    public Result updateBrandFile(MultipartFile file) throws Exception {
 
         try {
 
@@ -87,12 +87,12 @@ public class FileController {
                 //   row.getLastCellNum()
                 double value = row.getCell(0).getNumericCellValue();
                 String  value1 = row.getCell(1).getStringCellValue();
-//                String stringCellValue1 = row.getCell(2).getStringCellValue();
+//              String stringCellValue1 = row.getCell(2).getStringCellValue();
 
                 List list = new ArrayList();
                 list.add(value);
                 list.add(value1);
-//                list.add(stringCellValue1);
+//              list.add(stringCellValue1);
                 fileService.updateFileBrand(list);
             }
           //fileService.updateFile();
@@ -105,5 +105,116 @@ public class FileController {
        return  new Result(false,"导入失败");
 
    }
+
+
+
+
+    @RequestMapping(value = "/updateSpecificationFile")
+    public Result updateSpecificationFile(MultipartFile file) throws Exception {
+
+        try {
+
+            InputStream inputStream = file.getInputStream();
+
+            HSSFWorkbook book = new HSSFWorkbook(inputStream);
+            HSSFSheet sheet = book.getSheetAt(0);
+
+            int rowNum = sheet.getLastRowNum();
+
+            for (int i = 0; i < sheet.getLastRowNum(); i++) {
+                HSSFRow row = sheet.getRow(i+1);
+                String  value1 = row.getCell(0).getStringCellValue();
+
+                List list = new ArrayList();
+                list.add(value1);
+
+                fileService.updateFileSpecification(list);
+            }
+            //fileService.updateFile();
+            return  new Result(true,"导入成功");
+
+        }    catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return  new Result(false,"导入失败");
+
+    }
+
+
+
+
+    @RequestMapping(value = "/updateTypeTemplateFile")
+    public Result updateTypeTemplateFile(MultipartFile file) throws Exception {
+
+        try {
+
+            InputStream inputStream = file.getInputStream();
+
+            HSSFWorkbook book = new HSSFWorkbook(inputStream);
+            HSSFSheet sheet = book.getSheetAt(0);
+
+            int rowNum = sheet.getLastRowNum();
+
+            for (int i = 0; i < sheet.getLastRowNum(); i++) {
+                HSSFRow row = sheet.getRow(i+1);
+                //   row.getLastCellNum()
+                String  stringCellValue1 = row.getCell(0).getStringCellValue();
+                String  stringCellValue2 = row.getCell(1).getStringCellValue();
+                String stringCellValue3 = row.getCell(2).getStringCellValue();
+                String stringCellValue4 = row.getCell(3).getStringCellValue();
+
+                List list = new ArrayList();
+                list.add(stringCellValue1);
+                list.add(stringCellValue2);
+                list.add(stringCellValue3);
+                list.add(stringCellValue4);
+                fileService.updateFileTypeTemplate(list);
+            }
+            //fileService.updateFile();
+            return  new Result(true,"导入成功");
+
+        }    catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return  new Result(false,"导入失败");
+
+    }
+
+
+
+    @RequestMapping(value = "/updateContentCategoryFile")
+    public Result updateContentCategoryFile(MultipartFile file) throws Exception {
+
+        try {
+
+            InputStream inputStream = file.getInputStream();
+
+            HSSFWorkbook book = new HSSFWorkbook(inputStream);
+            HSSFSheet sheet = book.getSheetAt(0);
+
+            int rowNum = sheet.getLastRowNum();
+
+            for (int i = 0; i < sheet.getLastRowNum(); i++) {
+                HSSFRow row = sheet.getRow(i+1);
+                String  value1 = row.getCell(0).getStringCellValue();
+
+                List list = new ArrayList();
+                list.add(value1);
+
+                fileService.updateFileContentCategory(list);
+
+            }
+            //fileService.updateFile();
+            return  new Result(true,"导入成功");
+
+        }    catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return  new Result(false,"导入失败");
+
+    }
 
 }
